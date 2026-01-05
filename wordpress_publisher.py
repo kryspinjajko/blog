@@ -430,6 +430,52 @@ class WordPressPublisher:
                 "error": str(e)
             }
     
+    def delete_post(self, post_id, force=True):
+        """Delete a WordPress post"""
+        try:
+            response = requests.delete(
+                f"{self.api_url}/posts/{post_id}",
+                headers=self.headers,
+                params={"force": force},
+                timeout=10
+            )
+            response.raise_for_status()
+            print(f"✓ Post {post_id} deleted successfully")
+            return True
+        except Exception as e:
+            print(f"✗ Error deleting post {post_id}: {e}")
+            return False
+    
+    def delete_all_posts(self):
+        """Delete all posts from WordPress"""
+        try:
+            # Get all posts
+            response = requests.get(
+                f"{self.api_url}/posts",
+                headers=self.headers,
+                params={"per_page": 100, "status": "any"},
+                timeout=30
+            )
+            response.raise_for_status()
+            posts = response.json()
+            
+            print(f"Found {len(posts)} posts to delete")
+            
+            deleted_count = 0
+            for post in posts:
+                post_id = post.get('id')
+                post_title = post.get('title', {}).get('rendered', 'Unknown')
+                if self.delete_post(post_id):
+                    deleted_count += 1
+                    print(f"  Deleted: {post_title}")
+            
+            print(f"\n✓ Deleted {deleted_count} out of {len(posts)} posts")
+            return deleted_count
+            
+        except Exception as e:
+            print(f"✗ Error deleting posts: {e}")
+            return 0
+    
     def update_post(self, post_id, post_data):
         """Update an existing post"""
         try:

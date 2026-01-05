@@ -131,40 +131,6 @@ class LooksmaxingResearch:
         }
     }
     
-    # Content Themes (from best-of-the-best analysis)
-    CONTENT_THEMES = {
-        "guides": [
-            "Complete Skincare Routine for Maximum Results",
-            "Mewing: The Ultimate Jawline Enhancement Guide",
-            "How to Achieve a Chad Physique Naturally",
-            "Softmaxxing vs Hardmaxxing: Complete Breakdown",
-            "The Sleepmaxxing Playbook: Optimize Your Rest",
-            "Mouth Widening Techniques and Appliances",
-            "Teeth Whitening Methods That Actually Work",
-            "First Steroid Cycle: A Comprehensive Guide",
-            "Collagen Maximization for Skin Health",
-            "Posture Correction for Better Appearance"
-        ],
-        "transformations": [
-            "How I Achieved [X] in [Time Period]",
-            "Before and After: My Looksmaxing Journey",
-            "My Natural Transformation Story",
-            "Results After [X] Months of Consistent Looksmaxing"
-        ],
-        "product_reviews": [
-            "Best Skincare Products for Men",
-            "Top Supplements for Aesthetic Enhancement",
-            "Recommended Tools for Mewing",
-            "Fashion Essentials for Better Appearance"
-        ],
-        "advanced_topics": [
-            "The Truth About Steroids and Peptides",
-            "Surgical Options for Facial Enhancement",
-            "Hormone Optimization for Aesthetics",
-            "Genetic Limitations and What You Can Change"
-        ]
-    }
-    
     # Language Patterns (from forum analysis)
     LANGUAGE_PATTERNS = {
         "tone": "direct, no-nonsense, results-focused, evidence-based",
@@ -283,12 +249,84 @@ class LooksmaxingResearch:
     
     @classmethod
     def get_topic_suggestion(cls):
-        """Generate a random topic suggestion based on research data"""
+        """Generate a creative, varied topic suggestion dynamically"""
         import random
         
-        theme_type = random.choice(list(cls.CONTENT_THEMES.keys()))
-        topics = cls.CONTENT_THEMES[theme_type]
-        return random.choice(topics)
+        # Build topics dynamically from categories and keywords for more variety
+        all_topics = []
+        
+        # Add topics from TOPIC_CATEGORIES (more specific)
+        for category, topics in cls.TOPIC_CATEGORIES.items():
+            all_topics.extend(topics)
+        
+        # Add creative combinations from keywords
+        primary_keywords = cls.KEYWORDS["primary"][:10]
+        secondary_keywords = cls.KEYWORDS["secondary"][:15]
+        long_tail = cls.KEYWORDS["long_tail"][:20]
+        
+        # Create dynamic topic combinations
+        topic_templates = [
+            "How to {action} for {goal}",
+            "The Ultimate {topic} Guide",
+            "{topic} Techniques That Actually Work",
+            "Complete {topic} Breakdown",
+            "{topic} Methods for Maximum Results",
+            "Best {topic} Strategies",
+            "{topic} Tips for Beginners",
+            "Advanced {topic} Techniques",
+            "{topic} vs {alternative}: Which Is Better?",
+            "How I {achievement} Through {method}",
+            "The Truth About {topic}",
+            "{topic} Playbook for {goal}",
+            "{topic} Mistakes to Avoid",
+            "Optimizing {topic} for {outcome}",
+            "{topic} Timeline and Expected Results"
+        ]
+        
+        # Generate creative topics dynamically
+        generated_topics = []
+        
+        # Pick a random base topic
+        base_topics = [
+            "mewing", "jawline development", "facial aesthetics", "softmaxxing", 
+            "hardmaxxing", "skincaremaxxing", "fitnessmaxxing", "sleepmaxxing",
+            "posture correction", "height optimization", "hormone optimization",
+            "facial symmetry", "bone structure", "eye area enhancement",
+            "physique development", "diet for aesthetics", "supplementation",
+            "hair styling", "fashion sense", "teeth whitening", "voice training"
+        ]
+        
+        # Pick random elements and combine
+        base = random.choice(base_topics)
+        template = random.choice(topic_templates)
+        
+        # Fill template with relevant terms
+        if "{action}" in template:
+            actions = ["improve", "optimize", "enhance", "develop", "maximize", "fix"]
+            goals = ["better results", "maximum gains", "chad aesthetic", "ascension"]
+            topic = template.format(action=random.choice(actions), goal=random.choice(goals))
+        elif "{topic}" in template:
+            topic = template.format(topic=base)
+        elif "{achievement}" in template:
+            achievements = ["improved my jawline", "ascended", "mogged 80% of guys", "got results"]
+            methods = ["mewing", "softmaxxing", "fitnessmaxxing", "looksmaxing"]
+            topic = template.format(achievement=random.choice(achievements), method=random.choice(methods))
+        elif "{alternative}" in template:
+            alternatives = {
+                "softmaxxing": "hardmaxxing",
+                "mewing": "jaw surgery",
+                "natural": "surgical",
+                "skincaremaxxing": "hardmaxxing"
+            }
+            alt = alternatives.get(base, "alternative methods")
+            topic = template.format(topic=base, alternative=alt)
+        elif "{outcome}" in template:
+            outcomes = ["better looks", "chad aesthetic", "maximum results", "ascension"]
+            topic = template.format(topic=base, outcome=random.choice(outcomes))
+        else:
+            topic = template.format(topic=base)
+        
+        return topic
     
     @classmethod
     def get_keywords_for_topic(cls, topic):
